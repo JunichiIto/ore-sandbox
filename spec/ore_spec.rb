@@ -1,4 +1,3 @@
-require 'active_support/core_ext/object'
 require 'spec_helper'
 
 describe Ore do
