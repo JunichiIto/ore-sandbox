@@ -2,69 +2,49 @@ require 'active_support/core_ext/object'
 require 'spec_helper'
 
 describe Ore do
-  describe '.firstname' do
-    subject { Ore.firstname lastname }
-
-    context 'when lastname is "Matsuyama"' do
-      let(:lastname) { 'Matsuyama' }
+  describe '#first_name' do
+    let(:ore) { Ore.new(last_name) }
+    let(:last_name) { nil }
+    subject { ore.first_name }
+    context 'when Matsuyama' do
+      let(:last_name) { 'Matsuyama' }
       it { is_expected.to eq 'Hideyuki' }
     end
-
-    context 'when lastname is "松山"' do
-      let(:lastname) { '松山' }
+    context 'when 松山' do
+      let(:last_name) { '松山' }
       it { is_expected.to eq '秀行' }
     end
-
-    context 'when lastname is "Foo"' do
-      let(:lastname) { 'Foo' }
+    context 'when Foo' do
+      let(:last_name) { 'Foo' }
       it { is_expected.to eq '(Unknown)' }
-      it 'should receive .怪しむ' do
-        expect(Ore).to receive(:怪しむ).with(lastname); subject
-      end
     end
-  end
-
-  describe '.load_file' do
-    let(:target_filepath) { puts __FILE__; File.expand_path("../../config/ore.yml", __FILE__) }
-
-    subject { Ore.load_file target_filepath }
-
-    it { is_expected.to be_present }
-
-    context 'when the loading filepath is nil' do
-      let(:target_filepath) { nil }
-
-      it 'should does not printing message, and raise error' do
-        expect do
-          expect(Ore).not_to receive(:print_message)
-          subject
-        end.to raise_error
-      end
-    end
-
-    context 'when the loading filepath does not exist' do
-      let(:target_filepath) { 'not_exist_filepath.yml' }
-
-      it 'should printing message, and does not raise error' do
-        expect do
-          expect(Ore).to receive(:print_message).with(target_filepath)
-          subject
-        end.not_to raise_error
-      end
-    end
-  end
-
-  describe '.怪しむ' do
-    subject { Ore.怪しむ lastname }
-
-    context 'when lastname is "オレオレ"' do
-      let(:lastname) { 'オレオレ' }
-      it { is_expected.to eq '詐欺かも' }
-    end
-
-    context 'when lastname is "だれだれ"' do
-      let(:lastname) { 'だれだれ' }
+    context 'when だれだれ' do
+      let(:last_name) { 'だれだれ' }
       it { is_expected.to eq '(Unknown)' }
+    end
+    context 'when Foo' do
+      let(:last_name) { 'Foo' }
+      it { is_expected.to eq '(Unknown)' }
+    end
+    context 'when file_path is nil' do
+      before do
+        allow(ore).to receive(:file_path).and_return(nil)
+      end
+      it 'raises error' do
+        expect{ore.first_name}.to raise_error(TypeError)
+      end
+    end
+    context 'when file does not exist' do
+      let(:last_name) { '松山' }
+      before do
+        path = File.expand_path("../../config/foo.yml", __FILE__)
+        allow(ore).to receive(:file_path).and_return(path)
+      end
+      it { is_expected.to be_nil }
+      it 'gives message' do
+        expect{ore.first_name}.to \
+          output(/foo\.yml' is not found\./).to_stdout
+      end
     end
   end
 end

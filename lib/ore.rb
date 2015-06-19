@@ -1,28 +1,28 @@
 require 'yaml'
 
 class Ore
-  def self.firstname(lastname)
-    filepath = File.expand_path("../../config/ore.yml", __FILE__)
-    ore = load_file filepath
-    find_ore = ore.find { |row| row['lastname'] == lastname }
-    find_ore ? find_ore['firstname'] : 怪しむ(lastname)
+  def initialize(last_name)
+    @last_name = last_name
   end
 
-  def self.load_file(filepath)
-    begin
-      YAML.load_file filepath
-    rescue Errno::ENOENT
-      print_message filepath
-    rescue
-      raise
+  def first_name
+    config = YAML.load_file(file_path).map(&:values).to_h.invert
+    if first_name = config[@last_name]
+      first_name
+    else
+      @last_name == 'オレオレ' ? '詐欺かも' : '(Unknown)'
     end
+  rescue Errno::ENOENT
+    print_message file_path
   end
 
-  def self.怪しむ(lastname)
-    lastname == 'オレオレ' ? '詐欺かも' : '(Unknown)'
+  private
+
+  def file_path
+    File.expand_path("../../config/ore.yml", __FILE__)
   end
 
-  def self.print_message(filepath)
+  def print_message(filepath)
     puts "'#{filepath}' is not found."
   end
 end
