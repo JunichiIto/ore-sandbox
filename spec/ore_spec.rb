@@ -28,7 +28,7 @@ describe Ore do
       end
       it { is_expected.to be_nil }
       it 'prints message' do
-        expect{ore.first_name}.to \
+        expect{ subject }.to \
           output(/foo\.yml' is not found\./).to_stdout
       end
     end
