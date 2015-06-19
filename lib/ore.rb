@@ -11,7 +11,7 @@ class Ore
     if File.exists?(file_path)
       name_table[@last_name] || '(Unknown)'
     else
-      puts "#{file_path} is not found."
+      puts "'#{file_path}' is not found."
     end
   end
 
