@@ -22,11 +22,14 @@ describe Ore do
 
     context 'when file is missing' do
       let(:last_name) { '松山' }
+
       before do
         path = File.expand_path("../../config/foo.yml", __FILE__)
         allow(ore).to receive(:file_path).and_return(path)
       end
+
       it { is_expected.to be_nil }
+
       it 'prints message' do
         expect{ subject }.to \
           output(/foo\.yml' is not found\./).to_stdout
